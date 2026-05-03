@@ -59,7 +59,6 @@ public final class NHMGames extends JavaPlugin {
      * @param <T> Typed manager
      */
     @SuppressWarnings("unchecked")
-    @SneakyThrows
     public <T extends NHMManager> T getManager(NHMManager.ManagerType managerType) {
         if(!managers.containsKey(managerType)){
             throw new NullPointerException(String.format("Manager %s not found", managerType));

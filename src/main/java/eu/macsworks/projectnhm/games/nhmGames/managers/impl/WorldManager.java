@@ -1,20 +1,18 @@
 package eu.macsworks.projectnhm.games.nhmGames.managers.impl;
 
-import eu.macsworks.projectnhm.games.nhmGames.NHMGames;
 import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
+import lombok.AccessLevel;
 import lombok.Getter;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.generator.ChunkGenerator;
-
-import java.util.UUID;
 
 @Getter
 public class WorldManager extends NHMManager {
 
     private World gameWorld;
 
+    @Getter(AccessLevel.NONE)
     private int nextChunkX = 0, nextChunkZ = 0;
 
     public WorldManager() {
@@ -29,24 +27,20 @@ public class WorldManager extends NHMManager {
         gameWorld = creator.createWorld();
     }
 
-    /**
-     * Returns a new chunk x, and automatically shifts chunkZ (and resets itself to 0) if more than 10 chunkX on the same Z have happened
-     * @return the chunkX coordinate for the next game map
-     */
-    public int getNextChunkX() {
-        int chunkX = nextChunkX;
-
+    public MapOffset getNextChunkCoordinates() {
         nextChunkX += 512;
         if(nextChunkX / 512 >= 10){
             nextChunkX = 0;
             nextChunkZ += 512;
         }
 
-        return chunkX;
+        return new MapOffset(nextChunkX, nextChunkZ);
     }
 
     @Override
     public void onDestroy() {
 
     }
+
+    public record MapOffset(int chunkX, int chunkZ) {}
 }

@@ -35,8 +35,7 @@ public class LoadedGameMap {
     public Pair<Vector, Vector> placeMap(Map<Material, InstancedGameMap.Marker> markerMapToPopulate){
         World world = worldManager.getGameWorld();
 
-        int startChunkX = worldManager.getNextChunkX();
-        int startChunkZ = worldManager.getNextChunkZ();
+        WorldManager.MapOffset offset = worldManager.getNextChunkCoordinates();
 
         //Group blocks by chunk, storing world-space coords + their blockdata;
         //track bounds simultaneously to avoid a second pass
@@ -46,9 +45,9 @@ public class LoadedGameMap {
         Map<Long, List<Object[]>> byChunk = new HashMap<>();
         for (Map.Entry<Vector, BlockData> entry : blocks.entrySet()) {
             Vector pos = entry.getKey();
-            int wx = pos.getBlockX() + startChunkX;
+            int wx = pos.getBlockX() + offset.chunkX() * 16;
             int wy = pos.getBlockY();
-            int wz = pos.getBlockZ() + startChunkZ;
+            int wz = pos.getBlockZ() + offset.chunkZ() * 16;
 
             if (wx < minX) minX = wx; if (wx > maxX) maxX = wx;
             if (wy < minY) minY = wy; if (wy > maxY) maxY = wy;
