@@ -4,7 +4,25 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="0875da69-9bb8-4905-990d-e4e99f0b42cd" name="Changes" comment="chore: added death-race module" />
+    <list default="true" id="0875da69-9bb8-4905-990d-e4e99f0b42cd" name="Changes" comment="chore: added death-race module">
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/api/NHMLifecycledObject.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/core/InstancedGameMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/core/LoadedGameMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/core/NHMGame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/core/markers/SpawnMarker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/impl/GameType.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/impl/deathrace/DeathRaceGame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/impl/deathrace/map/DeathRaceMap.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/impl/deathrace/map/markers/TestMarker.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/games/impl/manhunt/ManhuntGame.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/managers/NHMManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/managers/impl/GameManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/managers/impl/WorldManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/utils/SchematicLoader.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/NhmGames.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/eu/macsworks/projectnhm/games/nhmGames/NHMGames.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/paper-plugin.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/paper-plugin.yml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -19,9 +37,48 @@
       <ProjectState />
     </projectState>
   </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="nhm-games" type="f1a62948:ProjectNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Record" />
+        <option value="Interface" />
+        <option value="Enum" />
+        <option value="Class" />
+      </list>
+    </option>
+  </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "ItsMacs"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/ItsMacs/nhm-games.git",
+    "accountId": "e2444ba1-d4e6-49db-88ce-7076251535ab"
+  }
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -54,7 +111,7 @@
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
-    "settings.editor.selected.configurable": "editor.preferences.fonts.default",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
     "to.speed.mode.migration.done": "true"
   },
   "keyToStringList": {
@@ -63,6 +120,11 @@
     ]
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="eu.macsworks.projectnhm.games.nhmGames.managers.impl" />
+    </key>
+  </component>
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
       <changelist id="0875da69-9bb8-4905-990d-e4e99f0b42cd" name="Changes" comment="" />

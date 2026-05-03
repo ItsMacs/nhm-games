@@ -6,10 +6,24 @@ plugins {
 
 repositories {
     mavenCentral()
+    maven("https://jitpack.io/")
 }
 
 dependencies {
     paperweight.paperDevBundle("26.1.2.build.+")
+
+    //NBT library
+    implementation("com.github.Querz:NBT:6.1")
+
+    //Guava
+    implementation("com.google.guava:guava:33.6.0-jre")
+
+    //Lombok
+    compileOnly("org.projectlombok:lombok:1.18.46")
+    annotationProcessor("org.projectlombok:lombok:1.18.46")
+
+    testCompileOnly("org.projectlombok:lombok:1.18.46")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.46")
 }
 
 java {
@@ -18,11 +32,8 @@ java {
 
 tasks {
     runServer {
-        // Configure the Minecraft version for our task.
-        // This is the only required configuration besides applying the plugin.
-        // Your plugin's jar (or shadowJar if present) will be used automatically.
         minecraftVersion("26.1.2")
-        jvmArgs("-Xms2G", "-Xmx2G", "-Dcom.mojang.eula.agree=true")
+        jvmArgs("-Xms1G", "-Xmx1G", "-Dcom.mojang.eula.agree=true")
     }
 
     processResources {

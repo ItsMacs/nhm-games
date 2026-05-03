@@ -3,7 +3,7 @@ description: $description
 prefix: NHMGames
 version: '${version}'
 
-main: eu.macsworks.projectnhm.games.nhmGames.NhmGames
+main: eu.macsworks.projectnhm.games.nhmGames.NHMGames
 api-version: '26.1.2'
 load: POSTWORLD
 
