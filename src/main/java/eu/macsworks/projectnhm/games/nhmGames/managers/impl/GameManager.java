@@ -28,6 +28,8 @@ public class GameManager extends NHMManager {
     }
 
     public Optional<NHMGame> getGameAt(Location location) {
-        return games.values().stream().filter(game -> game.)
+        return games.values().stream()
+                .filter(game -> game.getGameMap().contains(location))
+                .findFirst();
     }
 }

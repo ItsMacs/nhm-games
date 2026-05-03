@@ -5,6 +5,7 @@ import eu.macsworks.projectnhm.games.nhmGames.api.NHMLifecycledObject;
 import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.WorldManager;
 import lombok.Getter;
+import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.util.Vector;
@@ -57,6 +58,14 @@ public abstract class InstancedGameMap implements NHMLifecycledObject {
     public void registerMarker(Marker marker){
         marker.world = gameWorld;
         mapMarkers.put(marker.getMaterial(), marker);
+    }
+
+    public boolean contains(Location location){
+        if(!location.getWorld().equals(gameWorld)) return false;
+
+        return location.getBlockX() >= minBound.getBlockX() && location.getBlockX() <= maxBound.getBlockX()
+                && location.getBlockY() >= minBound.getBlockY() && location.getBlockY() <= maxBound.getBlockY()
+                && location.getBlockZ() >= minBound.getBlockZ() && location.getBlockZ() <= maxBound.getBlockZ();
     }
 
 
