@@ -1,0 +1,11 @@
+name: nhm-games
+description: $description
+prefix: NHMGames
+version: '${version}'
+
+main: eu.macsworks.projectnhm.games.nhmGames.NhmGames
+api-version: '26.1.2'
+load: POSTWORLD
+
+authors: [Alice]
+website: project-nhm.com
