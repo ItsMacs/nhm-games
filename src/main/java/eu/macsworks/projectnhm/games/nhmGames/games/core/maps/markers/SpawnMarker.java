@@ -1,8 +1,7 @@
-package eu.macsworks.projectnhm.games.nhmGames.games.core.markers;
+package eu.macsworks.projectnhm.games.nhmGames.games.core.maps.markers;
 
-import eu.macsworks.projectnhm.games.nhmGames.games.core.InstancedGameMap;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.InstancedGameMap;
 import org.bukkit.Material;
-import org.bukkit.World;
 
 public class SpawnMarker extends InstancedGameMap.Marker {
 

@@ -1,6 +1,6 @@
 package eu.macsworks.projectnhm.games.nhmGames.games.impl.deathrace.map.markers;
 
-import eu.macsworks.projectnhm.games.nhmGames.games.core.InstancedGameMap;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.InstancedGameMap;
 import org.bukkit.Material;
 
 public class TestMarker extends InstancedGameMap.Marker {

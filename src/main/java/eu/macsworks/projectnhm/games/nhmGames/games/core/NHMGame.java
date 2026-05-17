@@ -2,17 +2,25 @@ package eu.macsworks.projectnhm.games.nhmGames.games.core;
 
 import eu.macsworks.projectnhm.games.nhmGames.NHMGames;
 import eu.macsworks.projectnhm.games.nhmGames.api.NHMLifecycledObject;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.InstancedGameMap;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.LoadedGameMap;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.state.states.LobbyState;
 import eu.macsworks.projectnhm.games.nhmGames.utils.SchematicLoader;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Getter
@@ -20,12 +28,15 @@ public abstract class NHMGame implements NHMLifecycledObject {
 
     private final NHMGames mainInstance;
     private final String gameID;
-    private final int maxPlayers;
+    private final int minPlayers, maxPlayers;
 
     @Getter(AccessLevel.PRIVATE)
     private final List<LoadedGameMap> gameMaps = new ArrayList<>();
 
     private InstancedGameMap gameMap;
+    private GameState gameState;
+
+    private final List<UUID> players = new ArrayList<>();
 
     @Override
     public void onInit(){
@@ -33,6 +44,8 @@ public abstract class NHMGame implements NHMLifecycledObject {
 
         //TODO: Make selection a VIP perk
         chooseMap();
+
+        setGameState(new LobbyState(this, createInProgressGameState()));
     }
 
     @Override
@@ -46,6 +59,22 @@ public abstract class NHMGame implements NHMLifecycledObject {
     }
 
     protected abstract InstancedGameMap createGameMap(LoadedGameMap map);
+    protected abstract @NotNull GameState createInProgressGameState();
+
+    public void tick(){
+        if(gameState == null) return;
+
+        gameState.onTick();
+    }
+
+    public void setGameState(GameState newState){
+        if(gameState != null){
+            gameState.onEnd();
+        }
+
+        gameState = newState;
+        gameState.onStart();
+    }
 
     @SneakyThrows
     public void loadMaps(){
@@ -69,4 +98,10 @@ public abstract class NHMGame implements NHMLifecycledObject {
         }
     }
 
+    /**
+     * @return Returns a list of the currently online players that are in the game.
+     */
+    public List<Player> getPlayers(){
+        return players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList();
+    }
 }
