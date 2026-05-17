@@ -3,6 +3,7 @@ package eu.macsworks.projectnhm.games.nhmGames.games.core.state;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.bukkit.entity.Player;
 
 @Getter
 public abstract class GameState {
@@ -33,5 +34,8 @@ public abstract class GameState {
     public long elapsedTime(){
         return System.currentTimeMillis() - startEpoch;
     }
+
+    public void onPlayerJoin(Player player){}
+    public void onPlayerQuit(Player player){}
 
 }

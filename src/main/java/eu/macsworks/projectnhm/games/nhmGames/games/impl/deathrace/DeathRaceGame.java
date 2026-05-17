@@ -13,7 +13,7 @@ public class DeathRaceGame extends NHMGame {
     private final NHMGames mainInstance;
 
     public DeathRaceGame(NHMGames mainInstance) {
-        super(mainInstance, "DeathRace", 2);
+        super(mainInstance, "DeathRace", 2, 2);
 
         this.mainInstance = mainInstance;
     }

@@ -16,7 +16,8 @@ public class LobbyState extends GameState {
 
     @Override
     public void onStart() {
-
+        //TODO: Teleport players to lobby in some way.
+        //TODO: There aren't gonna be any players online when this fires.
     }
 
     @Override

@@ -5,6 +5,8 @@ import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
 
 public class EndState extends GameState {
 
+    public static long DURATION = 10 * 1000L;
+
     public EndState(NHMGame game) {
         super("End", game);
     }
@@ -16,6 +18,9 @@ public class EndState extends GameState {
 
     @Override
     public void onTick() {
+        if(elapsedTime() < DURATION) return;
+
+        //TODO: Send players back to lobby
 
     }
 

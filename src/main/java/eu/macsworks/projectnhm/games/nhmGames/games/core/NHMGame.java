@@ -14,6 +14,7 @@ import lombok.SneakyThrows;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.NotNullByDefault;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,7 +23,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 
-@RequiredArgsConstructor
 @Getter
 public abstract class NHMGame implements NHMLifecycledObject {
 
@@ -38,8 +38,17 @@ public abstract class NHMGame implements NHMLifecycledObject {
 
     private final List<UUID> players = new ArrayList<>();
 
+    public NHMGame(NHMGames mainInstance, String gameID, int minPlayers, int maxPlayers) {
+        this.mainInstance = mainInstance;
+        this.gameID = gameID;
+        this.minPlayers = minPlayers;
+        this.maxPlayers = maxPlayers;
+    }
+
     @Override
     public void onInit(){
+        Bukkit.getPluginManager().registerEvents(new GameListener(this), mainInstance);
+
         loadMaps();
 
         //TODO: Make selection a VIP perk
@@ -103,5 +112,13 @@ public abstract class NHMGame implements NHMLifecycledObject {
      */
     public List<Player> getPlayers(){
         return players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList();
+    }
+
+    public boolean isPlayerInGame(Player player){
+        return players.contains(player.getUniqueId());
+    }
+
+    public boolean isPlayerInGame(UUID uuid){
+        return players.contains(uuid);
     }
 }
