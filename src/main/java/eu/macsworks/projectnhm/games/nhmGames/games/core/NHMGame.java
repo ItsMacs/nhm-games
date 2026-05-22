@@ -119,6 +119,14 @@ public abstract class NHMGame implements NHMLifecycledObject {
         return players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList();
     }
 
+    public void addPlayer(UUID uuid){
+        players.add(uuid);
+    }
+
+    public void removePlayer(UUID uuid){
+        players.remove(uuid);
+    }
+
     public boolean isPlayerInGame(Player player){
         return players.contains(player.getUniqueId());
     }

@@ -24,6 +24,12 @@ dependencies {
 
     testCompileOnly("org.projectlombok:lombok:1.18.46")
     testAnnotationProcessor("org.projectlombok:lombok:1.18.46")
+
+    //Jedis
+    implementation("redis.clients:jedis:7.1.0")
+
+    //Apache Commons
+    implementation("commons-codec:commons-codec:1.15")
 }
 
 java {

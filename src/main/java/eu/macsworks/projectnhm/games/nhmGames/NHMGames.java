@@ -1,12 +1,16 @@
 package eu.macsworks.projectnhm.games.nhmGames;
 
+import eu.macsworks.projectnhm.games.nhmGames.config.LoadedConfig;
 import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.GameManager;
+import eu.macsworks.projectnhm.games.nhmGames.managers.impl.RedisManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.WorldManager;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -16,10 +20,13 @@ import java.util.SplittableRandom;
 public final class NHMGames extends JavaPlugin {
 
     public static final SplittableRandom RANDOM = new SplittableRandom();
+    public static final Logger LOGGER = LoggerFactory.getLogger(NHMGames.class);
 
     @Setter(AccessLevel.PRIVATE)
     @Getter
     private static NHMGames instance = null;
+
+    private LoadedConfig loadedConfig;
 
     @Getter(AccessLevel.PRIVATE)
     private final Map<Class<? extends NHMManager>, NHMManager> managers = new HashMap<>();
@@ -29,14 +36,18 @@ public final class NHMGames extends JavaPlugin {
         setInstance(this);
         long timeInitStart = System.currentTimeMillis();
 
+        loadedConfig = new LoadedConfig(this);
+        loadedConfig.init();
+
         loadManagers();
 
         getLogger().info(String.format("Initialization done (%sms)",  System.currentTimeMillis() - timeInitStart));
     }
 
     private void loadManagers(){
-        addManager(new GameManager());
-        addManager(new WorldManager());
+        addManager(new GameManager(this));
+        addManager(new WorldManager(this));
+        addManager(new RedisManager(this));
     }
 
     private void addManager(NHMManager manager){

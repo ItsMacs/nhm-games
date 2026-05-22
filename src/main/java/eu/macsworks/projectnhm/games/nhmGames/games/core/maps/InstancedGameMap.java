@@ -74,6 +74,10 @@ public abstract class InstancedGameMap implements NHMLifecycledObject {
                 && location.getBlockZ() >= minBound.getBlockZ() && location.getBlockZ() <= maxBound.getBlockZ();
     }
 
+    public Location getCenter(){
+        return minBound.clone().add(maxBound).multiply(0.5).toLocation(gameWorld);
+    }
+
 
     @Getter
     public static abstract class Marker {

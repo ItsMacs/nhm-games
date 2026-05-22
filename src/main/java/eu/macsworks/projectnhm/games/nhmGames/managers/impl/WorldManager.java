@@ -1,5 +1,6 @@
 package eu.macsworks.projectnhm.games.nhmGames.managers.impl;
 
+import eu.macsworks.projectnhm.games.nhmGames.NHMGames;
 import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -15,8 +16,8 @@ public class WorldManager extends NHMManager {
     @Getter(AccessLevel.NONE)
     private int nextChunkX = 0, nextChunkZ = 0;
 
-    public WorldManager() {
-        super(ManagerType.WORLD);
+    public WorldManager(NHMGames mainInstance) {
+        super(mainInstance);
     }
 
     @Override

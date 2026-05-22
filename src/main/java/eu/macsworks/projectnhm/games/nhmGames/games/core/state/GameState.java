@@ -5,6 +5,7 @@ import eu.macsworks.projectnhm.games.nhmGames.utils.DurationUtils;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
+import org.bukkit.GameMode;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -63,9 +64,18 @@ public abstract class GameState {
     public Duration elapsedTime(){
         return Duration.ofMillis(System.currentTimeMillis() - startEpoch);
     }
-    public Duration remainingTime() { return Duration.ofMillis(duration.toMillis() - getStartEpoch()); }
+    public Duration remainingTime() { return Duration.ofMillis(duration.toMillis() - elapsedTime().toMillis()); }
 
-    public void onPlayerJoin(Player player){}
+    public boolean isStateFinished() {
+        return elapsedTime().compareTo(remainingTime()) > 0;
+    }
+
+    //Default impl, place the sucker at the center of the map in spectator mode
+    public void onPlayerJoin(Player player){
+        player.setGameMode(GameMode.SPECTATOR);
+        player.teleport(game.getGameMap().getCenter());
+    }
+
     public void onPlayerQuit(Player player){}
     public void onPlayerRespawn(Player player){}
 

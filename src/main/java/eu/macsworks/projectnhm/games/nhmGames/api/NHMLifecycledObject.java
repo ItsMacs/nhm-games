@@ -32,7 +32,7 @@ public interface NHMLifecycledObject {
         logger.info(String.format("Destroyed: %s, took %sms", getId(),  System.currentTimeMillis() - timeDestroyStart));
     }
 
-    void onInit();
-    void onDestroy();
+    default void onInit(){}
+    default void onDestroy(){}
 
 }

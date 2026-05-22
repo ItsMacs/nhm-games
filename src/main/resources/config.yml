@@ -1,0 +1,7 @@
+#SERVERNAME
+server-name: eu-test-01
+
+#REDIS
+redis:
+  host: localhost
+  port: 6379

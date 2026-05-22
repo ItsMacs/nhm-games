@@ -35,7 +35,7 @@ public class LobbyState extends GameState {
 
     @Override
     public void onTick() {
-        if(elapsedTime().compareTo(getDuration()) >= 0) {
+        if(isStateFinished()) {
             //Not enough players have joined, don't start the gamemode
             if(getGame().getPlayers().size() < getGame().getMinPlayers()){
                 setStartEpoch(System.currentTimeMillis());
@@ -72,6 +72,8 @@ public class LobbyState extends GameState {
                     .stream()
                     .min(Comparator.comparingInt(marker -> playerSpawnMarkers.get(marker).size()))
                     .orElseThrow(() -> new IllegalStateException("No spawn markers found on map " + getGame().getGameMap().getId()));
+
+            playerSpawnMarkers.put(playerMarker, player);
         }else{
             //Phew, we have an empty marker. Spawn the bad boy on there. (or bad girl, or bad... person?)
             playerSpawnMarkers.put(firstEmptyMarker.get(), player);
