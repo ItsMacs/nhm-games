@@ -11,6 +11,7 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -59,7 +60,7 @@ public abstract class NHMGame implements NHMLifecycledObject {
 
     @Override
     public void onDestroy(){
-
+        //Send all remaining players to lobby servers
     }
 
     private void chooseMap(){
@@ -73,16 +74,20 @@ public abstract class NHMGame implements NHMLifecycledObject {
     public void tick(){
         if(gameState == null) return;
 
-        gameState.onTick();
+        gameState.tick();
     }
 
     public void setGameState(GameState newState){
         if(gameState != null){
-            gameState.onEnd();
+            gameState.end();
         }
 
         gameState = newState;
-        gameState.onStart();
+        gameState.start();
+    }
+
+    public void broadcast(Component component){
+        getPlayers().forEach(player -> player.sendMessage(component));
     }
 
     @SneakyThrows

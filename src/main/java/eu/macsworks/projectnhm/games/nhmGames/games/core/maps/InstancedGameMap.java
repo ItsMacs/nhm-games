@@ -3,7 +3,6 @@ package eu.macsworks.projectnhm.games.nhmGames.games.core.maps;
 import eu.macsworks.projectnhm.games.nhmGames.NHMGames;
 import eu.macsworks.projectnhm.games.nhmGames.api.NHMLifecycledObject;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
-import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.WorldManager;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -27,13 +26,14 @@ public abstract class InstancedGameMap implements NHMLifecycledObject {
     private Vector minBound;
     private Vector maxBound;
 
-    private final Map<Material, Marker> mapMarkers = new HashMap<>();
+    private final Map<Material, Marker> registeredMarkers = new HashMap<>();
+    private List<InstancedMarker<? extends Marker>> mapMarkers;
 
     public InstancedGameMap(NHMGame game, LoadedGameMap loadedGameMap){
         this.game = game;
         this.loadedGameMap = loadedGameMap;
         this.mainInstance = game.getMainInstance();
-        this.gameWorld = mainInstance.<WorldManager>getManager(NHMManager.ManagerType.WORLD).getGameWorld();
+        this.gameWorld = mainInstance.getManager(WorldManager.class).getGameWorld();
     }
 
     protected abstract void registerMarkers();
@@ -42,9 +42,11 @@ public abstract class InstancedGameMap implements NHMLifecycledObject {
     public void onInit() {
         registerMarkers();
 
-        Pair<Vector, Vector> bounds = loadedGameMap.placeMap(mapMarkers);
-        this.minBound = bounds.getA();
-        this.maxBound = bounds.getB();
+        InstancedMapData data = loadedGameMap.placeMap(registeredMarkers);
+
+        mapMarkers = Collections.unmodifiableList(data.mapMarkers);
+        this.minBound = data.bounds().getA();
+        this.maxBound = data.bounds().getB();
     }
 
     @Override
@@ -52,13 +54,16 @@ public abstract class InstancedGameMap implements NHMLifecycledObject {
 
     }
 
-    public Optional<Marker> getMarkerOfType(Class<? extends Marker> markerType){
-        return mapMarkers.values().stream().filter(marker -> marker.getClass().equals(markerType)).findFirst();
+    @SuppressWarnings("unchecked")
+    public <T extends Marker> List<InstancedMarker<T>> getMarkersOfType(Class<T> markerType){
+        return mapMarkers.stream()
+                .filter(marker -> markerType.isInstance(marker.marker()))
+                .map(marker -> (InstancedMarker<T>) marker)
+                .toList();
     }
 
     public void registerMarker(Marker marker){
-        marker.world = gameWorld;
-        mapMarkers.put(marker.getMaterial(), marker);
+        registeredMarkers.put(marker.getMaterial(), marker);
     }
 
     public boolean contains(Location location){
@@ -72,21 +77,26 @@ public abstract class InstancedGameMap implements NHMLifecycledObject {
 
     @Getter
     public static abstract class Marker {
-        private World world;
         private final Material material;
-        private final List<Vector> markers = new ArrayList<>();
 
-        public Marker(Material material){
+        public Marker(Material material) {
             this.material = material;
         }
-
-        public void addMarker(Vector marker){
-            markers.add(marker);
-            world.getBlockAt(marker.getBlockX(), marker.getBlockY(), marker.getBlockZ()).setType(Material.AIR);
-        }
-
-        public List<Vector> getMarkers() {
-            return Collections.unmodifiableList(markers);
-        }
     }
+
+    public record InstancedMarker<T extends Marker>(T marker, Vector position, World world) {
+            public InstancedMarker(T marker, Vector position, World world) {
+                this.marker = marker;
+                this.position = position;
+                this.world = world;
+
+                world.getBlockAt(position.getBlockX(), position.getBlockY(), position.getBlockZ()).setType(Material.AIR);
+            }
+
+            public Location getLocation() {
+                return position.toLocation(world);
+            }
+        }
+
+    public record InstancedMapData(Pair<Vector, Vector> bounds, List<InstancedMarker<? extends Marker>> mapMarkers){};
 }

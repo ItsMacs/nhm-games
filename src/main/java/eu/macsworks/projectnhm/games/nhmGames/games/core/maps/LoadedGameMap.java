@@ -30,13 +30,15 @@ public class LoadedGameMap {
         this.blocks = blocks;
 
         this.mainInstance = ownerGame.getMainInstance();
-        this.worldManager = mainInstance.getManager(NHMManager.ManagerType.WORLD);
+        this.worldManager = mainInstance.getManager(WorldManager.class);
     }
 
-    public Pair<Vector, Vector> placeMap(Map<Material, InstancedGameMap.Marker> markerMapToPopulate){
+    public InstancedGameMap.InstancedMapData placeMap(Map<Material, InstancedGameMap.Marker> registeredMarkers){
         World world = worldManager.getGameWorld();
 
         WorldManager.MapOffset offset = worldManager.getNextChunkCoordinates();
+
+        List<InstancedGameMap.InstancedMarker<? extends InstancedGameMap.Marker>> markers = new ArrayList<>();
 
         //Group blocks by chunk, storing world-space coords + their blockdata;
         //track bounds simultaneously to avoid a second pass
@@ -46,6 +48,7 @@ public class LoadedGameMap {
         Map<Long, List<Object[]>> byChunk = new HashMap<>();
         for (Map.Entry<Vector, BlockData> entry : blocks.entrySet()) {
             Vector pos = entry.getKey();
+
             int wx = pos.getBlockX() + offset.chunkX() * 16;
             int wy = pos.getBlockY();
             int wz = pos.getBlockZ() + offset.chunkZ() * 16;
@@ -53,15 +56,18 @@ public class LoadedGameMap {
             if (wx < minX) minX = wx; if (wx > maxX) maxX = wx;
             if (wy < minY) minY = wy; if (wy > maxY) maxY = wy;
             if (wz < minZ) minZ = wz; if (wz > maxZ) maxZ = wz;
+
             Material blockMaterial = entry.getValue().getMaterial();
 
-            if(markerMapToPopulate.containsKey(blockMaterial)){
-                markerMapToPopulate.get(blockMaterial).addMarker(pos);
+            if(registeredMarkers.containsKey(blockMaterial)){
+                InstancedGameMap.Marker marker = registeredMarkers.get(blockMaterial);
+                InstancedGameMap.InstancedMarker<?> instancedMarker = new InstancedGameMap.InstancedMarker<>(marker, pos, world);
+
+                markers.add(instancedMarker);
             }
 
             long key = ((long) (wx >> 4) << 32) | ((wz >> 4) & 0xFFFFFFFFL);
-            byChunk.computeIfAbsent(key, _ -> new ArrayList<>())
-                   .add(new Object[]{wx, wy, wz, entry.getValue()});
+            byChunk.computeIfAbsent(key, _ -> new ArrayList<>()).add(new Object[]{wx, wy, wz, entry.getValue()});
         }
 
         for (Map.Entry<Long, List<Object[]>> entry : byChunk.entrySet()) {
@@ -78,6 +84,7 @@ public class LoadedGameMap {
             });
         }
 
-        return new Pair<>(new Vector(minX, minY, minZ), new Vector(maxX, maxY, maxZ));
+        Pair<Vector, Vector> mapBounds = new Pair<>(new Vector(minX, minY, minZ), new Vector(maxX, maxY, maxZ));
+        return new InstancedGameMap.InstancedMapData(mapBounds, markers);
     }
 }

@@ -6,7 +6,6 @@ import eu.macsworks.projectnhm.games.nhmGames.managers.impl.WorldManager;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.SneakyThrows;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.HashMap;
@@ -23,7 +22,7 @@ public final class NHMGames extends JavaPlugin {
     private static NHMGames instance = null;
 
     @Getter(AccessLevel.PRIVATE)
-    private final Map<NHMManager.ManagerType, NHMManager> managers = new HashMap<>();
+    private final Map<Class<? extends NHMManager>, NHMManager> managers = new HashMap<>();
 
     @Override
     public void onEnable() {
@@ -40,14 +39,14 @@ public final class NHMGames extends JavaPlugin {
         addManager(new WorldManager());
     }
 
-    public void addManager(NHMManager manager){
-        managers.put(manager.getManagerType(), manager);
+    private void addManager(NHMManager manager){
+        managers.put(manager.getClass(), manager);
 
         manager.init();
     }
 
-    public void removeManager(NHMManager manager){
-        managers.remove(manager.getManagerType());
+    private void removeManager(NHMManager manager){
+        managers.remove(manager.getClass());
 
         manager.destroy();
     }
@@ -59,7 +58,7 @@ public final class NHMGames extends JavaPlugin {
      * @param <T> Typed manager
      */
     @SuppressWarnings("unchecked")
-    public <T extends NHMManager> T getManager(NHMManager.ManagerType managerType) {
+    public <T extends NHMManager> T getManager(Class<T> managerType) {
         if(!managers.containsKey(managerType)){
             throw new NullPointerException(String.format("Manager %s not found", managerType));
         }

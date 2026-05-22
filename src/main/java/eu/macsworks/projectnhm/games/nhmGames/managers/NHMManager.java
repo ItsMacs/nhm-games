@@ -8,10 +8,4 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public abstract class NHMManager implements NHMLifecycledObject {
 
-    private final ManagerType managerType;
-
-    public enum ManagerType{
-        GAME,
-        WORLD;
-    }
 }

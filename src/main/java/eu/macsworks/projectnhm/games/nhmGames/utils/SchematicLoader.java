@@ -1,5 +1,6 @@
 package eu.macsworks.projectnhm.games.nhmGames.utils;
 
+import lombok.experimental.UtilityClass;
 import net.querz.nbt.io.NBTUtil;
 import net.querz.nbt.tag.CompoundTag;
 import net.querz.nbt.tag.IntTag;
@@ -13,9 +14,10 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+@UtilityClass
 public class SchematicLoader {
 
-    public static Map<Vector, BlockData> readSchematic(File schematic) throws IOException {
+    public Map<Vector, BlockData> readSchematic(File schematic) throws IOException {
         CompoundTag root = (CompoundTag) NBTUtil.read(schematic).getTag();
 
         int width  = root.getShort("Width");

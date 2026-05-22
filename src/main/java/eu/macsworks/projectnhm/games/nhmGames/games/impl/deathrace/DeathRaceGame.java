@@ -6,6 +6,7 @@ import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.LoadedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
 import eu.macsworks.projectnhm.games.nhmGames.games.impl.deathrace.map.DeathRaceMap;
+import eu.macsworks.projectnhm.games.nhmGames.games.impl.deathrace.states.DeathRaceInProgressState;
 import org.jetbrains.annotations.NotNull;
 
 public class DeathRaceGame extends NHMGame {
@@ -38,5 +39,5 @@ public class DeathRaceGame extends NHMGame {
     }
 
     @Override
-    protected @NotNull GameState createInProgressGameState() {return null; }
+    protected @NotNull GameState createInProgressGameState() {return new DeathRaceInProgressState(this); }
 }
