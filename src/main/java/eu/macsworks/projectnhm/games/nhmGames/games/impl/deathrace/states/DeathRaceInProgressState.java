@@ -6,7 +6,7 @@ import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
 public class DeathRaceInProgressState extends GameState {
 
     public DeathRaceInProgressState(NHMGame game) {
-        super("DeathRace-InProgressState", game);
+        super("DeathRace-InProgressState", game, "Match ends");
     }
 
     @Override

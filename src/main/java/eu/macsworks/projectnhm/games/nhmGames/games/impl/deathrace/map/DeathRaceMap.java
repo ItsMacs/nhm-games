@@ -13,6 +13,6 @@ public class DeathRaceMap extends InstancedGameMap {
 
     @Override
     protected void registerMarkers() {
-        registerMarker(TestMarker.class);
+        registerMarker(new TestMarker());
     }
 }
