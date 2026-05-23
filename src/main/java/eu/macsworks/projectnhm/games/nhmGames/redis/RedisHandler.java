@@ -2,6 +2,7 @@ package eu.macsworks.projectnhm.games.nhmGames.redis;
 
 import eu.macsworks.projectnhm.games.nhmGames.NHMGames;
 import eu.macsworks.projectnhm.games.nhmGames.api.NHMLifecycledObject;
+import eu.macsworks.projectnhm.games.nhmGames.managers.impl.RedisManager;
 import eu.macsworks.projectnhm.games.nhmGames.redis.pubsub.NHMJedisPubSub;
 import eu.macsworks.projectnhm.games.nhmGames.redis.pubsub.impl.PlayerServersPubSub;
 import lombok.Getter;
@@ -23,9 +24,8 @@ public class RedisHandler implements NHMLifecycledObject {
     private static final long MAX_BACKOFF_MILLIS = 30_000L;
 
     private final NHMGames mainInstance;
-    @Getter
-    private JedisPool jedisPool;
 
+    private JedisPool jedisPool;
     private final List<NHMJedisPubSub> subscribers = new ArrayList<>();
     private final List<Thread> subscriberThreads = new ArrayList<>();
     private volatile boolean shuttingDown = false;
@@ -33,17 +33,7 @@ public class RedisHandler implements NHMLifecycledObject {
     @SneakyThrows
     @Override
     public void onInit() {
-        JedisPoolConfig jedisPoolConfig = new JedisPoolConfig();
-        jedisPoolConfig.setMaxIdle(16);
-        jedisPoolConfig.setMaxTotal(24);
-        jedisPoolConfig.setMaxWait(Duration.ofSeconds(3));
-        jedisPoolConfig.setTestOnBorrow(true);
-        jedisPoolConfig.setTestOnReturn(true);
-        jedisPoolConfig.setTestWhileIdle(true);
-
-        jedisPool = new JedisPool(jedisPoolConfig, mainInstance.getLoadedConfig().getRedisConfig().host(),
-                mainInstance.getLoadedConfig().getRedisConfig().port());
-
+        jedisPool = mainInstance.getManager(RedisManager.class).getJedisPool();
         addSubscriber(new PlayerServersPubSub(mainInstance));
     }
 
@@ -90,7 +80,5 @@ public class RedisHandler implements NHMLifecycledObject {
         });
 
         subscriberThreads.forEach(Thread::interrupt);
-
-        if (jedisPool != null) jedisPool.close();
     }
 }

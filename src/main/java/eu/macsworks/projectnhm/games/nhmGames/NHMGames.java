@@ -1,5 +1,6 @@
 package eu.macsworks.projectnhm.games.nhmGames;
 
+import com.google.gson.Gson;
 import eu.macsworks.projectnhm.games.nhmGames.config.LoadedConfig;
 import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.GameManager;
@@ -8,6 +9,7 @@ import eu.macsworks.projectnhm.games.nhmGames.managers.impl.WorldManager;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
+import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -19,6 +21,8 @@ import java.util.SplittableRandom;
 @Getter
 public final class NHMGames extends JavaPlugin {
 
+    public static final String POD_ID = String.format("nhm-games:pods:%s", System.getenv("POD_ID"));
+    public static final Gson GSON = new Gson();
     public static final SplittableRandom RANDOM = new SplittableRandom();
     public static final Logger LOGGER = LoggerFactory.getLogger(NHMGames.class);
 
@@ -33,6 +37,11 @@ public final class NHMGames extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if(System.getenv("POD_ID") == null){
+            crash("Pod ID isn't set in env variables.", new IllegalStateException("Pod ID isn't set in env variables."));
+            return;
+        }
+
         setInstance(this);
         long timeInitStart = System.currentTimeMillis();
 
@@ -40,8 +49,13 @@ public final class NHMGames extends JavaPlugin {
         loadedConfig.init();
 
         loadManagers();
+        loadTasks();
 
         getLogger().info(String.format("Initialization done (%sms)",  System.currentTimeMillis() - timeInitStart));
+    }
+
+    private void loadTasks(){
+        Bukkit.getScheduler().runTaskTimer(this, () -> managers.values().forEach(NHMManager::onTick), 0L, 10L);
     }
 
     private void loadManagers(){
@@ -82,5 +96,14 @@ public final class NHMGames extends JavaPlugin {
         long timeDisStart = System.currentTimeMillis();
 
         getLogger().info(String.format("Disabling done (%sms)",  System.currentTimeMillis() - timeDisStart));
+    }
+
+    /**
+     * E-stop in case anything goes south and we need to destroy the pod quickly
+     * Knowing myself this will be the most used call of the project
+     */
+    public static void crash(String message, Throwable cause) {
+        LOGGER.error("FATAL: {} — terminating pod", message, cause);
+        Runtime.getRuntime().halt(1);
     }
 }

@@ -7,10 +7,7 @@ import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.LoadedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.states.LobbyState;
 import eu.macsworks.projectnhm.games.nhmGames.utils.SchematicLoader;
-import lombok.AccessLevel;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
+import lombok.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -19,13 +16,13 @@ import org.jetbrains.annotations.NotNullByDefault;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Getter
+@ToString
 public abstract class NHMGame implements NHMLifecycledObject {
+
+    private final GameType gameType;
 
     private final NHMGames mainInstance;
     private final String gameID;
@@ -39,7 +36,8 @@ public abstract class NHMGame implements NHMLifecycledObject {
 
     private final List<UUID> players = new ArrayList<>();
 
-    public NHMGame(NHMGames mainInstance, String gameID, int minPlayers, int maxPlayers) {
+    public NHMGame(GameType type, NHMGames mainInstance, String gameID, int minPlayers, int maxPlayers) {
+        this.gameType = type;
         this.mainInstance = mainInstance;
         this.gameID = gameID;
         this.minPlayers = minPlayers;
@@ -117,6 +115,10 @@ public abstract class NHMGame implements NHMLifecycledObject {
      */
     public List<Player> getPlayers(){
         return players.stream().map(Bukkit::getPlayer).filter(Objects::nonNull).toList();
+    }
+
+    public List<UUID> getPlayersUUIDs(){
+        return Collections.unmodifiableList(players);
     }
 
     public void addPlayer(UUID uuid){

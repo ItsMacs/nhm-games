@@ -15,8 +15,9 @@ dependencies {
     //NBT library
     implementation("com.github.Querz:NBT:6.1")
 
-    //Guava
+    //Guava and Gson
     implementation("com.google.guava:guava:33.6.0-jre")
+    implementation("com.google.code.gson:gson:2.14.0")
 
     //Lombok
     compileOnly("org.projectlombok:lombok:1.18.46")

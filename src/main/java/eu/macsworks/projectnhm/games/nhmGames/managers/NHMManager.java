@@ -12,4 +12,6 @@ public abstract class NHMManager implements NHMLifecycledObject {
 
     private final NHMGames mainInstance;
 
+    public void onTick(){}
+
 }
