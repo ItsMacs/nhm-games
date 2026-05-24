@@ -52,6 +52,12 @@ public class GameManager extends NHMManager {
         return game;
     }
 
+    public boolean destroyGame(NHMGame game) {
+        boolean removed = games.remove(game.getGameType().key(), game);
+        if (removed) game.destroy();
+        return removed;
+    }
+
     public void joinGame(UUID uuid, String gameID){
         Optional<NHMGame> game = getGameFromID(gameID);
         if(game.isEmpty()) return;

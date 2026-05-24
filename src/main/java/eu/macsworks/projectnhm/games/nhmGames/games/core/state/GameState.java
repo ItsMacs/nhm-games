@@ -2,6 +2,7 @@ package eu.macsworks.projectnhm.games.nhmGames.games.core.state;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
+import eu.macsworks.projectnhm.games.nhmGames.NHMGames;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.InstancedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.utils.DurationUtils;
@@ -19,6 +20,8 @@ import java.util.Optional;
 
 @Getter
 public abstract class GameState {
+
+    private final NHMGames mainInstance;
 
     private final String name;
     private final NHMGame game;
@@ -40,6 +43,8 @@ public abstract class GameState {
         this.game = game;
         this.duration = duration;
         this.broadcastAction = broadcastAction;
+
+        mainInstance = NHMGames.getInstance();
     }
 
     //Setter here to allow pushback/pushforwards of the builtin timer

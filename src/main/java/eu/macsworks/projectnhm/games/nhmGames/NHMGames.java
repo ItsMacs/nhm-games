@@ -3,6 +3,7 @@ package eu.macsworks.projectnhm.games.nhmGames;
 import com.google.gson.Gson;
 import eu.macsworks.projectnhm.games.nhmGames.config.LoadedConfig;
 import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
+import eu.macsworks.projectnhm.games.nhmGames.managers.impl.CommandsManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.GameManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.RedisManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.WorldManager;
@@ -62,6 +63,7 @@ public final class NHMGames extends JavaPlugin {
         addManager(new GameManager(this));
         addManager(new WorldManager(this));
         addManager(new RedisManager(this));
+        addManager(new CommandsManager(this));
     }
 
     private void addManager(NHMManager manager){

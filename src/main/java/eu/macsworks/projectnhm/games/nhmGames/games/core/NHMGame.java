@@ -6,6 +6,7 @@ import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.InstancedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.LoadedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.states.LobbyState;
+import eu.macsworks.projectnhm.games.nhmGames.managers.impl.RedisManager;
 import eu.macsworks.projectnhm.games.nhmGames.utils.SchematicLoader;
 import lombok.*;
 import net.kyori.adventure.text.Component;
@@ -58,7 +59,7 @@ public abstract class NHMGame implements NHMLifecycledObject {
 
     @Override
     public void onDestroy(){
-        //Send all remaining players to lobby servers
+        getPlayersUUIDs().forEach(uuid -> getMainInstance().getManager(RedisManager.class).getPlayerLobbyPubSub().sendToLobby(uuid));
     }
 
     private void chooseMap(){

@@ -49,7 +49,6 @@ public class PodHeartbeatHandler implements NHMLifecycledObject {
                 jedis.set(NHMGames.POD_ID, heartbeatPayload, SetParams.setParams().ex(10L));
                 lastHeartbeatEpoch = System.currentTimeMillis();
             } catch (Exception e) {
-                //Don't update lastHeartbeatEpoch, next tick retries, and TTL expiry tells the load balancer we're shambles
                 NHMGames.LOGGER.warn("Heartbeat failed", e);
             } finally {
                 inFlight.set(false);

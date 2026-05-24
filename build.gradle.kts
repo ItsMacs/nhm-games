@@ -31,6 +31,10 @@ dependencies {
 
     //Apache Commons
     implementation("commons-codec:commons-codec:1.15")
+
+    //Incendo Cloud command framework
+    implementation("org.incendo:cloud-paper:2.0.0-beta.10")
+    implementation("org.incendo:cloud-annotations:2.0.0")
 }
 
 java {

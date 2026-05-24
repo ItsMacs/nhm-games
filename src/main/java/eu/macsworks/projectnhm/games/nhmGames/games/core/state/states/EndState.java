@@ -2,6 +2,7 @@ package eu.macsworks.projectnhm.games.nhmGames.games.core.state.states;
 
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
+import eu.macsworks.projectnhm.games.nhmGames.managers.impl.RedisManager;
 
 import java.time.Duration;
 
@@ -13,14 +14,12 @@ public class EndState extends GameState {
 
     @Override
     public void onStart() {
-
+        getGame().getPlayersUUIDs().forEach(uuid ->
+                getMainInstance().getManager(RedisManager.class).getPlayerLobbyPubSub().sendToLobby(uuid));
     }
 
     @Override
     public void onTick() {
-        if(!isStateFinished()) return;
-
-        //TODO: Send players back to lobby
     }
 
     @Override
