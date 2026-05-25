@@ -19,12 +19,12 @@ import java.util.Comparator;
 import java.util.Optional;
 
 @Getter
-public abstract class GameState {
+public abstract class GameState<T extends NHMGame> {
 
     private final NHMGames mainInstance;
 
     private final String name;
-    private final NHMGame game;
+    private final T game;
     private final Duration duration;
 
     //String that's broadcasted as part of the states automatic "XXXX in Y seconds!" broadcast
@@ -34,11 +34,11 @@ public abstract class GameState {
     //not enough of them.
     private final Multimap<InstancedGameMap.InstancedMarker<? extends InstancedGameMap.Marker>, Player> playerSpawnMarkers = MultimapBuilder.hashKeys().arrayListValues().build();
 
-    public GameState(String name, NHMGame game, String broadcastAction) {
+    public GameState(String name, T game, String broadcastAction) {
         this(name, game, Duration.ofDays(100L), broadcastAction);
     }
 
-    public GameState(String name, NHMGame game, Duration duration, String broadcastAction) {
+    public GameState(String name, T game, Duration duration, String broadcastAction) {
         this.name = name;
         this.game = game;
         this.duration = duration;
@@ -57,6 +57,8 @@ public abstract class GameState {
 
     public void tick(){
         onTick();
+
+        if(broadcastAction == null) return;
 
         //Get the current countdown from the start (on 0s from the start = duration, on duration = 0)
         long remainingMs = remainingTime().toMillis();
@@ -90,8 +92,8 @@ public abstract class GameState {
         return !remainingTime().isPositive();
     }
 
-    protected <T extends InstancedGameMap.Marker> void spawnPlayer(Player player, Class<T> spawnMarkerClass){
-        Optional<InstancedGameMap.InstancedMarker<T>> firstEmptyMarker = getGame().getGameMap()
+    protected <J extends InstancedGameMap.Marker> void spawnPlayer(Player player, Class<J> spawnMarkerClass){
+        Optional<InstancedGameMap.InstancedMarker<J>> firstEmptyMarker = getGame().getGameMap()
                 .getMarkersOfType(spawnMarkerClass)
                 .stream()
                 .filter(marker -> !playerSpawnMarkers.containsKey(marker))
@@ -131,5 +133,7 @@ public abstract class GameState {
     public boolean onPlayerDamaged(Player player, EntityDamageEvent.DamageCause source, double damageAmt){ return false; }
     public boolean onPlayerDamagedByEntity(Player player, Entity entity, double damageAmt){ return false; }
     public boolean onPlayerDamagedByPlayer(Player player, Player damager, double damageAmt){ return false; }
+
+    public boolean onPlayerDeath(Player player){ return false; }
 
 }

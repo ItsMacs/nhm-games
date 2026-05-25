@@ -7,13 +7,13 @@ import org.bukkit.entity.Player;
 
 import java.time.Duration;
 
-public class LobbyState extends GameState {
+public class LobbyState<T extends NHMGame> extends GameState<T> {
 
     public static long FULL_COUNTDOWN = 5L * 1000L;
 
-    private final GameState inProgressGameState;
+    private final GameState<T> inProgressGameState;
 
-    public LobbyState(NHMGame game, GameState inProgressState) {
+    public LobbyState(T game, GameState<T> inProgressState) {
         super("Lobby", game, Duration.ofSeconds(60), "Match starting");
 
         this.inProgressGameState = inProgressState;

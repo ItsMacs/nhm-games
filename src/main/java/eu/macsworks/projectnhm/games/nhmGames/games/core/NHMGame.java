@@ -70,6 +70,16 @@ public abstract class NHMGame implements NHMLifecycledObject {
     protected abstract InstancedGameMap createGameMap(LoadedGameMap map);
     protected abstract @NotNull GameState createInProgressGameState();
 
+    public void win(List<Player> winners){
+
+    }
+
+    public void eliminate(List<Player> eliminated){
+        players.removeAll(eliminated.stream().map(Player::getUniqueId).toList());
+
+        eliminated.forEach(p -> broadcast(Component.text("Player " + p.getName() + " has been eliminated!")));
+    }
+
     public void tick(){
         if(gameState == null) return;
 

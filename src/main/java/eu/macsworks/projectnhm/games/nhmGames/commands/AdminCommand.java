@@ -5,9 +5,9 @@ import eu.macsworks.projectnhm.games.nhmGames.games.core.GameType;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.GameManager;
 import lombok.RequiredArgsConstructor;
-import net.kyori.adventure.text.Component;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.network.chat.Component;
 import org.bukkit.NamespacedKey;
-import org.bukkit.command.CommandSender;
 import org.incendo.cloud.annotations.Argument;
 import org.incendo.cloud.annotations.Command;
 import org.incendo.cloud.annotations.Permission;
@@ -21,32 +21,32 @@ public class AdminCommand {
 
     @Command("nhm create <gameType>")
     @Permission("nhm.admin.create")
-    public void createGame(CommandSender sender, @Argument("gameType") String gameTypeKey) {
+    public void createGame(CommandSourceStack sender, @Argument("gameType") String gameTypeKey) {
         GameManager gameManager = mainInstance.getManager(GameManager.class);
         NamespacedKey key = new NamespacedKey(mainInstance, gameTypeKey);
 
         Optional<GameType> type = gameManager.getGameRegistry().get(key);
         if (type.isEmpty()) {
-            sender.sendMessage(Component.text("Unknown game type: " + gameTypeKey));
+            sender.sendFailure(Component.literal("Unknown game type: " + gameTypeKey));
             return;
         }
 
         NHMGame game = gameManager.createGame(type.get());
-        sender.sendMessage(Component.text("Created game " + game.getGameID() + " (" + type.get().key() + ")"));
+        sender.sendSuccess(() -> Component.literal("Created game " + game.getGameID() + " (" + type.get().key() + ")"), false);
     }
 
     @Command("nhm destroy <gameId>")
     @Permission("nhm.admin.destroy")
-    public void destroyGame(CommandSender sender, @Argument("gameId") String gameId) {
+    public void destroyGame(CommandSourceStack sender, @Argument("gameId") String gameId) {
         GameManager gameManager = mainInstance.getManager(GameManager.class);
 
         Optional<NHMGame> game = gameManager.getGameFromID(gameId);
         if (game.isEmpty()) {
-            sender.sendMessage(Component.text("No game with ID: " + gameId));
+            sender.sendFailure(Component.literal("No game with ID: " + gameId));
             return;
         }
 
         gameManager.destroyGame(game.get());
-        sender.sendMessage(Component.text("Destroyed game " + gameId));
+        sender.sendSuccess(() -> Component.literal("Destroyed game " + gameId), false);
     }
 }

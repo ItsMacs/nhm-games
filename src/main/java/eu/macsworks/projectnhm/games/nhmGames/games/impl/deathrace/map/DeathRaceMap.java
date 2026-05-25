@@ -3,7 +3,6 @@ package eu.macsworks.projectnhm.games.nhmGames.games.impl.deathrace.map;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.InstancedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.LoadedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
-import eu.macsworks.projectnhm.games.nhmGames.games.impl.deathrace.map.markers.TestMarker;
 
 public class DeathRaceMap extends InstancedGameMap {
 
@@ -13,6 +12,6 @@ public class DeathRaceMap extends InstancedGameMap {
 
     @Override
     protected void registerMarkers() {
-        registerMarker(new TestMarker());
+
     }
 }

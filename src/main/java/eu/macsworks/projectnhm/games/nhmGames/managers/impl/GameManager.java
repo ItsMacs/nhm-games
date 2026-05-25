@@ -80,4 +80,10 @@ public class GameManager extends NHMManager {
                 .filter(game -> game.getGameID().equals(id))
                 .findFirst();
     }
+
+    public Optional<NHMGame> getGameForPlayer(UUID uuid) {
+        return games.values().stream()
+                .filter(game -> game.isPlayerInGame(uuid))
+                .findFirst();
+    }
 }

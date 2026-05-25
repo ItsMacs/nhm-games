@@ -7,31 +7,19 @@ import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.LoadedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
 import eu.macsworks.projectnhm.games.nhmGames.games.impl.deathrace.map.DeathRaceMap;
-import eu.macsworks.projectnhm.games.nhmGames.games.impl.deathrace.states.DeathRaceInProgressState;
+import eu.macsworks.projectnhm.games.nhmGames.games.impl.deathrace.states.DeathRaceSelectingCauseState;
+import lombok.Getter;
+import lombok.Setter;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class DeathRaceGame extends NHMGame {
 
-    private final NHMGames mainInstance;
+    @Getter @Setter
+    private EntityDamageEvent.DamageCause damageType;
 
     public DeathRaceGame(NHMGames mainInstance, GameType gameType) {
         super(gameType, mainInstance, "DeathRace", 2, 2);
-
-        this.mainInstance = mainInstance;
-    }
-
-    @Override
-    public void onInit(){
-        super.onInit();
-
-
-    }
-
-    @Override
-    public void onDestroy(){
-        super.onDestroy();
-
-
     }
 
     @Override
@@ -40,5 +28,5 @@ public class DeathRaceGame extends NHMGame {
     }
 
     @Override
-    protected @NotNull GameState createInProgressGameState() {return new DeathRaceInProgressState(this); }
+    protected @NotNull GameState<DeathRaceGame> createInProgressGameState() {return new DeathRaceSelectingCauseState(this); }
 }

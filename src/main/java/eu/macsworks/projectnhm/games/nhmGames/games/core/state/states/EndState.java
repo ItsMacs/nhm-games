@@ -6,9 +6,9 @@ import eu.macsworks.projectnhm.games.nhmGames.managers.impl.RedisManager;
 
 import java.time.Duration;
 
-public class EndState extends GameState {
+public class EndState<T extends NHMGame> extends GameState<T> {
 
-    public EndState(NHMGame game) {
+    public EndState(T game) {
         super("End", game, Duration.ofSeconds(10), "Going back to lobby");
     }
 
