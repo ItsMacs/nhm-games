@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.text.Component;
 import org.bukkit.GameMode;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDamageEvent;
@@ -93,6 +95,16 @@ public abstract class GameState<T extends NHMGame> {
     }
 
     protected <J extends InstancedGameMap.Marker> void spawnPlayer(Player player, Class<J> spawnMarkerClass){
+        Optional<InstancedGameMap.InstancedMarker<? extends InstancedGameMap.Marker>> preExistingMarker = playerSpawnMarkers.keySet()
+                .stream()
+                .filter(m -> playerSpawnMarkers.get(m).contains(player) && spawnMarkerClass.isInstance(m.marker()))
+                .findFirst();
+
+        if(preExistingMarker.isPresent()){
+            player.teleportAsync(preExistingMarker.get().getLocation());
+            return;
+        }
+
         Optional<InstancedGameMap.InstancedMarker<J>> firstEmptyMarker = getGame().getGameMap()
                 .getMarkersOfType(spawnMarkerClass)
                 .stream()
@@ -130,10 +142,14 @@ public abstract class GameState<T extends NHMGame> {
     public void onPlayerRespawn(Player player){}
 
     //Boolean-based hooks: return value is whether the event shall be canceled or not
+    public boolean onEntityDamaged(Entity entity, EntityDamageEvent.DamageCause cause, double damageAmt){ return false; }
     public boolean onPlayerDamaged(Player player, EntityDamageEvent.DamageCause source, double damageAmt){ return false; }
     public boolean onPlayerDamagedByEntity(Player player, Entity entity, double damageAmt){ return false; }
     public boolean onPlayerDamagedByPlayer(Player player, Player damager, double damageAmt){ return false; }
 
     public boolean onPlayerDeath(Player player){ return false; }
+
+    public boolean onBlockBreak(Player player, Block block) { return false; }
+    public boolean onBlockPlace(Player player, Block block) { return false; }
 
 }

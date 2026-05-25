@@ -3,6 +3,8 @@ package eu.macsworks.projectnhm.games.nhmGames.games.core.maps;
 import eu.macsworks.projectnhm.games.nhmGames.NHMGames;
 import eu.macsworks.projectnhm.games.nhmGames.api.NHMLifecycledObject;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.markers.DefaultSpawnMarker;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.markers.LobbyMarker;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.WorldManager;
 import lombok.Getter;
 import org.bukkit.Location;
@@ -34,9 +36,12 @@ public abstract class InstancedGameMap implements NHMLifecycledObject {
         this.loadedGameMap = loadedGameMap;
         this.mainInstance = game.getMainInstance();
         this.gameWorld = mainInstance.getManager(WorldManager.class).getGameWorld();
+
+        registerMarker(new DefaultSpawnMarker());
+        registerMarker(new LobbyMarker());
     }
 
-    protected abstract void registerMarkers();
+    protected void registerMarkers(){}
 
     @Override
     public void onInit() {

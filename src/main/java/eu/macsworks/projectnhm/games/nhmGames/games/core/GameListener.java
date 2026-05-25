@@ -40,7 +40,12 @@ public class GameListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerDamage(EntityDamageEvent event){
-        if(!(event.getEntity() instanceof Player player)) return;
+        if(!(event.getEntity() instanceof Player player)) {
+            if(!game.isLocationInGame(event.getEntity().getLocation())) return;
+
+            event.setCancelled(game.getGameState().onEntityDamaged(event.getEntity(), event.getCause(), event.getDamage()));
+            return;
+        }
         if(!game.isPlayerInGame(player)) return;
 
         if(event.getCause() == EntityDamageEvent.DamageCause.ENTITY_ATTACK) return;

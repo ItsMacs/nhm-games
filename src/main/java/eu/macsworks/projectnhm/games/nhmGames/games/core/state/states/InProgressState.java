@@ -3,6 +3,7 @@ package eu.macsworks.projectnhm.games.nhmGames.games.core.state.states;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.GameManager;
+import org.bukkit.GameMode;
 
 import java.time.Duration;
 
@@ -22,7 +23,10 @@ public class InProgressState<T extends NHMGame> extends GameState<T> {
 
     @Override
     public void onStart() {
-
+        getGame().getPlayers().forEach(p -> {
+            p.setGameMode(GameMode.SURVIVAL);
+            p.getInventory().clear();
+        });
     }
 
     @Override
@@ -40,6 +44,9 @@ public class InProgressState<T extends NHMGame> extends GameState<T> {
 
     @Override
     public void onEnd() {
-
+        getGame().getPlayers().forEach(p -> {
+            p.setGameMode(GameMode.SPECTATOR);
+            p.getInventory().clear();
+        });
     }
 }

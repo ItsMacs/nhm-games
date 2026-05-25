@@ -1,6 +1,7 @@
 package eu.macsworks.projectnhm.games.nhmGames;
 
 import com.google.gson.Gson;
+import eu.macsworks.projectnhm.games.nhmGames.api.NHMLifecycledObject;
 import eu.macsworks.projectnhm.games.nhmGames.config.LoadedConfig;
 import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.CommandsManager;
@@ -96,6 +97,8 @@ public final class NHMGames extends JavaPlugin {
     @Override
     public void onDisable() {
         long timeDisStart = System.currentTimeMillis();
+
+        managers.values().forEach(NHMLifecycledObject::destroy);
 
         getLogger().info(String.format("Disabling done (%sms)",  System.currentTimeMillis() - timeDisStart));
     }

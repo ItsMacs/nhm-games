@@ -5,12 +5,14 @@ import eu.macsworks.projectnhm.games.nhmGames.api.NHMLifecycledObject;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.InstancedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.LoadedGameMap;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
+import eu.macsworks.projectnhm.games.nhmGames.games.core.state.states.EndState;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.states.LobbyState;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.RedisManager;
 import eu.macsworks.projectnhm.games.nhmGames.utils.SchematicLoader;
 import lombok.*;
 import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.NotNullByDefault;
@@ -36,6 +38,16 @@ public abstract class NHMGame implements NHMLifecycledObject {
     private GameState gameState;
 
     private final List<UUID> players = new ArrayList<>();
+    private final List<UUID> winners = new ArrayList<>();
+    private final List<UUID> eliminatedPlayers = new ArrayList<>();
+
+    public List<UUID> getWinners() {
+        return Collections.unmodifiableList(winners);
+    }
+
+    public List<UUID> getEliminatedPlayers() {
+        return Collections.unmodifiableList(eliminatedPlayers);
+    }
 
     public NHMGame(GameType type, NHMGames mainInstance, String gameID, int minPlayers, int maxPlayers) {
         this.gameType = type;
@@ -71,13 +83,26 @@ public abstract class NHMGame implements NHMLifecycledObject {
     protected abstract @NotNull GameState createInProgressGameState();
 
     public void win(List<Player> winners){
+        List<UUID> winnerUuids = winners.stream().map(Player::getUniqueId).toList();
+        List<Player> losers = getPlayers().stream()
+                .filter(p -> !winnerUuids.contains(p.getUniqueId()))
+                .toList();
 
+        eliminate(losers);
+
+        this.winners.clear();
+        this.winners.addAll(winnerUuids);
+
+        setGameState(new EndState<>(this));
     }
 
     public void eliminate(List<Player> eliminated){
         players.removeAll(eliminated.stream().map(Player::getUniqueId).toList());
 
-        eliminated.forEach(p -> broadcast(Component.text("Player " + p.getName() + " has been eliminated!")));
+        eliminated.forEach(p -> {
+            eliminatedPlayers.add(p.getUniqueId());
+            broadcast(Component.text("Player " + p.getName() + " has been eliminated!"));
+        });
     }
 
     public void tick(){
@@ -143,7 +168,7 @@ public abstract class NHMGame implements NHMLifecycledObject {
     public boolean isPlayerInGame(Player player){
         return players.contains(player.getUniqueId());
     }
-
+    public boolean isLocationInGame(Location location){ return gameMap.contains(location); }
     public boolean isPlayerInGame(UUID uuid){
         return players.contains(uuid);
     }

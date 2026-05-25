@@ -3,7 +3,10 @@ package eu.macsworks.projectnhm.games.nhmGames.games.core.state.states;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.maps.markers.LobbyMarker;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
+import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.EntityDamageEvent;
 
 import java.time.Duration;
 
@@ -21,7 +24,7 @@ public class LobbyState<T extends NHMGame> extends GameState<T> {
 
     @Override
     public void onStart() {
-
+        getGame().getPlayers().forEach(this::givePreMatchLoadout);
     }
 
     @Override
@@ -43,6 +46,10 @@ public class LobbyState<T extends NHMGame> extends GameState<T> {
         }
     }
 
+    private void givePreMatchLoadout(Player player) {
+        //TODO: Give the player the necessary items
+    }
+
     @Override
     public void onPlayerJoin(Player player){
         spawnPlayer(player, LobbyMarker.class);
@@ -51,5 +58,25 @@ public class LobbyState<T extends NHMGame> extends GameState<T> {
     @Override
     public void onEnd() {
 
+    }
+
+    @Override
+    public boolean onBlockBreak(Player player, Block block) {
+        return true;
+    }
+
+    @Override
+    public boolean onBlockPlace(Player player, Block block) {
+        return true;
+    }
+
+    @Override
+    public boolean onEntityDamaged(Entity entity, EntityDamageEvent.DamageCause cause, double damageAmt){
+        return true;
+    }
+
+    @Override
+    public boolean onPlayerDamaged(Player player, EntityDamageEvent.DamageCause source, double damageAmt){
+        return true;
     }
 }
