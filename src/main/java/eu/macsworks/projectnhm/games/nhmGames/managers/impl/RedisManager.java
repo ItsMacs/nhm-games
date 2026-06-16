@@ -5,6 +5,7 @@ import eu.macsworks.projectnhm.games.nhmGames.managers.NHMManager;
 import eu.macsworks.projectnhm.games.nhmGames.redis.RedisHandler;
 import eu.macsworks.projectnhm.games.nhmGames.redis.heartbeat.PodHeartbeatHandler;
 import eu.macsworks.projectnhm.games.nhmGames.redis.pubsub.impl.PlayerLobbyPubSub;
+import eu.macsworks.projectnhm.games.nhmGames.redis.pubsub.impl.PlayerServersPubSub;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import redis.clients.jedis.JedisPool;
@@ -20,6 +21,7 @@ public class RedisManager extends NHMManager {
     private RedisHandler redisHandler;
     private PodHeartbeatHandler podHeartbeatHandler;
     private PlayerLobbyPubSub playerLobbyPubSub;
+    private PlayerServersPubSub playerServersPubSub;
 
 
     public RedisManager(NHMGames mainInstance) {
@@ -30,9 +32,11 @@ public class RedisManager extends NHMManager {
     public void onInit() {
         initJedis();
 
-        redisHandler = new RedisHandler(getMainInstance());
+        redisHandler = new RedisHandler(getMainInstance(), this);
+
         podHeartbeatHandler = new PodHeartbeatHandler(getMainInstance());
         playerLobbyPubSub = new PlayerLobbyPubSub(getMainInstance());
+        playerServersPubSub = new PlayerServersPubSub(getMainInstance());
 
         podHeartbeatHandler.init();
         Bukkit.getScheduler().runTaskAsynchronously(getMainInstance(), redisHandler::init);

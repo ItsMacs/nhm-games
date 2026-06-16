@@ -38,8 +38,7 @@ public class PlayerLobbyPubSub extends NHMJedisPubSub {
         String finalPayload = payload;
 
         Bukkit.getScheduler().runTaskAsynchronously(mainInstance, () -> {
-            JedisPool pool = mainInstance.getManager(RedisManager.class).getJedisPool();
-            try (Jedis jedis = pool.getResource()) {
+            try (Jedis jedis = jedisPool.getResource()) {
                 jedis.publish(getChannel(), finalPayload);
             } catch (Exception e) {
                 NHMGames.LOGGER.warn("Failed to publish send-to-lobby for {}", uuid, e);

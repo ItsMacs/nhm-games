@@ -1,11 +1,8 @@
 package eu.macsworks.projectnhm.games.nhmGames.redis.heartbeat;
 
-import com.google.gson.Gson;
 import eu.macsworks.projectnhm.games.nhmGames.NHMGames;
 import eu.macsworks.projectnhm.games.nhmGames.api.NHMLifecycledObject;
-import eu.macsworks.projectnhm.games.nhmGames.games.core.GameType;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.NHMGame;
-import eu.macsworks.projectnhm.games.nhmGames.games.core.state.GameState;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.states.InProgressState;
 import eu.macsworks.projectnhm.games.nhmGames.games.core.state.states.LobbyState;
 import eu.macsworks.projectnhm.games.nhmGames.managers.impl.GameManager;
@@ -36,7 +33,7 @@ public class PodHeartbeatHandler implements NHMLifecycledObject {
     }
 
     public void tick(){
-        if(System.currentTimeMillis() - lastHeartbeatEpoch < 5L * 1000) return;
+        if(System.currentTimeMillis() - lastHeartbeatEpoch < 1000L) return;
         if(!inFlight.compareAndSet(false, true)) return; //a heartbeat is already in flight
 
         //gathered here and not in async to gather everything synchronously to avoid concurrency
@@ -60,7 +57,7 @@ public class PodHeartbeatHandler implements NHMLifecycledObject {
         return HeartbeatPayload.create(mainInstance).toString();
     }
 
-    record HeartbeatPayload(List<GameSnapshot> games, double tps, long mspt, int totalPlayers){
+    record HeartbeatPayload(String serverID, String serverIP, int serverPort, int maxPlayers, List<GameSnapshot> games, double tps, long mspt, int totalPlayers){
 
         @Override
         public @NonNull String toString(){
@@ -69,14 +66,20 @@ public class PodHeartbeatHandler implements NHMLifecycledObject {
 
         public static HeartbeatPayload create(NHMGames mainInstance){
             List<GameSnapshot> gameSnapshots = mainInstance.getManager(GameManager.class).getGames()
-                    .stream().map(game -> new GameSnapshot(game.getGameType().key().toString(),
+                    .stream().map(game -> new GameSnapshot(NHMGames.getInstance().getLoadedConfig().getServerName(),
+                            game.getGameID(),
+                            game.getGameType().key().toString(),
                             game.getPlayersUUIDs(),
                             game.getMinPlayers(),
                             game.getMaxPlayers(),
                             getRedisGameState(game)))
                     .toList();
 
-            return new HeartbeatPayload(gameSnapshots,
+            return new HeartbeatPayload(NHMGames.POD_ID,
+                    Bukkit.getIp(),
+                    Bukkit.getPort(),
+                    Bukkit.getServer().getMaxPlayers(),
+                    gameSnapshots,
                     Bukkit.getServer().getTPS()[0],
                     Bukkit.getServer().getTickTimes()[0],
                     Bukkit.getOnlinePlayers().size());
@@ -89,7 +92,7 @@ public class PodHeartbeatHandler implements NHMLifecycledObject {
             return RedisGameState.ENDED;
         }
 
-        record GameSnapshot(String gameType, List<UUID> players, int minPlayers, int maxPlayers, RedisGameState gameState){}
+        record GameSnapshot(String serverID, String gameID, String gameType, List<UUID> players, int minPlayers, int maxPlayers, RedisGameState gameState){}
 
         enum RedisGameState {
             LOBBY,

@@ -23,7 +23,7 @@ import java.util.SplittableRandom;
 @Getter
 public final class NHMGames extends JavaPlugin {
 
-    public static final String POD_ID = String.format("nhm-games:pods:%s", System.getenv("POD_ID"));
+    public static final String POD_ID = String.format("nhm-game-pods:%s", System.getenv("POD_ID"));
     public static final Gson GSON = new Gson();
     public static final SplittableRandom RANDOM = new SplittableRandom();
     public static final Logger LOGGER = LoggerFactory.getLogger(NHMGames.class);

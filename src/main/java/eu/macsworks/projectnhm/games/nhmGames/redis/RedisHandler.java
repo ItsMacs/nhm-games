@@ -22,6 +22,7 @@ public class RedisHandler implements NHMLifecycledObject {
 
     private final NHMGames mainInstance;
 
+    private final RedisManager redisManager;
     private JedisPool jedisPool;
     private final List<NHMJedisPubSub> subscribers = new ArrayList<>();
     private final List<Thread> subscriberThreads = new ArrayList<>();
@@ -31,7 +32,9 @@ public class RedisHandler implements NHMLifecycledObject {
     @Override
     public void onInit() {
         jedisPool = mainInstance.getManager(RedisManager.class).getJedisPool();
-        addSubscriber(new PlayerServersPubSub(mainInstance));
+
+        addSubscriber(redisManager.getPlayerLobbyPubSub());
+        addSubscriber(redisManager.getPlayerServersPubSub());
     }
 
     private void addSubscriber(NHMJedisPubSub jedisPubSub) {
